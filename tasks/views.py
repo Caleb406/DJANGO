@@ -4,20 +4,14 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-
-# Create your views here.
-
+from .forms import TaskForm
 
 def home(request):
-    return render(request, 'home.html',)
-
+    return render(request, 'home.html')
 
 def signup(request):
-
     if request.method == 'GET':
-        return render(request, 'signup.html', {
-            'form': UserCreationForm
-        })
+        return render(request, 'signup.html', {'form': UserCreationForm()})
     else:
         if request.POST['password1'] == request.POST['password2']:
             try:
@@ -28,17 +22,28 @@ def signup(request):
                 return redirect('tasks')
             except IntegrityError:
                 return render(request, 'signup.html', {
-                'form': UserCreationForm,
-                "error": "Usuario ya existe"
+                    'form': UserCreationForm(),
+                    "error": "Usuario ya existe"
+                })
+
+        return render(request, 'signup.html', {
+            'form': UserCreationForm(),
+            "error": "Contraseña no coincide"
         })
-    
-    return render(request, 'signup.html', {
-                'form': UserCreationForm,
-                "error": "Contraseña no coincide"})
-        
-        
+
 def tasks(request):
     return render(request, 'tasks.html')
+
+def create_tasks(request):
+    if request.method == 'GET':
+        return render(request, 'create_task.html',{
+            'form': TaskForm
+        })
+    else:
+        print(request.POST)
+        return render(request, 'create_task.html', {
+            'form': TaskForm
+        })
 
 def signout(request):
     logout(request)
@@ -46,16 +51,12 @@ def signout(request):
 
 def signin(request):
     if request.method == 'GET':
-        return render(request, 'signin.html', {
-            'form': AuthenticationForm
-        })
+        return render(request, 'signin.html', {'form': AuthenticationForm()})
     else:
-        user = authenticate(
-            request, username=request.POST['username'], password=request.POST
-            ['password'])
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
             return render(request, 'signin.html', {
-                'form': AuthenticationForm,
+                'form': AuthenticationForm(),
                 'error': 'Usuario o contraseña incorrecta'
             })
         else:
