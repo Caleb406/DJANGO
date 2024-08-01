@@ -1,6 +1,24 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block content %}
-<h1>Home</h1>
-<p>{{task.title}}</p>
-{% endblock%}
+<div class="container mt-4">
+    <h1>{{ task.title }}</h1>
+    <p>{{ task.description }}</p>
+
+    {{error}}
+
+    <form method="POST" class="mt-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">
+            Update
+        </button>
+    </form>
+
+    {% if error %}
+    <div class="alert alert-danger mt-3">
+        {{ error }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
