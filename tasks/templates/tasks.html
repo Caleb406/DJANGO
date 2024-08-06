@@ -1,20 +1,28 @@
-{% extends 'base.html '%}
+{% extends 'base.html' %}
 
-
-{% block content%}
-<h1>TASKS</h1>
-
-<ul>
-    {% for task in tasks %}
-    <li>
-        <a href="{% url 'task_detail' task.id %}">
-        <h1>{{task.title}}</h1>
-        <p>{{task.description}}</p>
-        <p>{{task.user.username}}</p>
-        <p>{{task.important}}</p>
+{% block content %}
+<main class="container">
+    <h1 class="text-center my-4">
+        {% if request.path == '/tasks/' %}
+            TAREAS PENDIENTES
+        {% elif request.path == '/tasks_completed/' %}
+            TAREAS COMPLETADAS
+        {% endif %}
+    </h1>
+    
+    <div class="list-group">
+        {% for task in tasks %}
+        <a href="{% url 'task_detail' task.id %}" class="list-group-item list-group-item-action {% if task.datecompleted %}list-group-item-success{% else %}{% if task.important %}list-group-item-danger{% else %}list-group-item-light{% endif %}{% endif %}">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Nombre: {{ task.title }}</h5>
+                <small>{{ task.datecompleted|date:'M j y, H:i' }}</small>
+            </div>
+            <p class="mb-1">Descripción: {{ task.description }}</p>
+            <small>Usuario: {{ task.user.username }}</small>
+            <br>
+            <small>Importante: {{ task.important|yesno:"Sí,No" }}</small>
         </a>
-    </li>
-    {% endfor %}
-</ul>
-
-{% endblock%}
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

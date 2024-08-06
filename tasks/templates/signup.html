@@ -1,19 +1,32 @@
-{% extends 'base.html '%}
+{% extends 'base.html' %}
 
-{% block content%}
-<h1>signup</h1>
-
-{{error}}
-
-<form action="/signup/" method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button>
-        signup
-    </button>
-
-</form>
-{% endblock%}
-
-
-
+{% block content %}
+<main class="container d-flex justify-content-center align-items-start min-vh-100" style="margin-top: 50px;">
+    <div class="card" style="width: 24rem;">
+        <div class="card-body">
+            <h1 class="card-title text-center">Registrarse</h1>
+            <form action="/signup/" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Nombre de usuario</label>
+                    <input type="text" name="username" class="form-control" id="id_username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">Contraseña</label>
+                    <input type="password" name="password1" class="form-control" id="id_password1" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">Confirmar contraseña</label>
+                    <input type="password" name="password2" class="form-control" id="id_password2" required>
+                </div>
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
